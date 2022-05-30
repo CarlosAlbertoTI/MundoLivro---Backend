@@ -14,7 +14,7 @@ class BookController {
 
   static async create(req, res) {
     const {title, author, categories} = req.body
-
+    
     return res.status(200).json({data: req.body})
   }
 
