@@ -1,73 +1,88 @@
 const { celebrate, Joi, Segments } = require('celebrate');
-loginController = require("../controller/login.controller.js")
-userController = require("../controller/user.controller.js")
-bookController = require("../controller/book.controller.js")
+
+const loginRouter = require("./login/")
+const userRouter = require("./user/")
+const bookRouter = require("./books/")
 
 const router = require("express").Router()
 
-// User
-router.post('/user', celebrate({
-  [Segments.BODY]: {
-    email: Joi.string().required()
-  }
-}), loginController.create)
+router.use(loginRouter)
+router.use(userRouter)
+router.use(bookRouter)
 
-router.get('/user', userController.getAll)
+// // Login
+// router.post('/login', celebrate({
+//   [Segments.BODY]: {
+//     email: Joi.email().required(),
+//     id: Joi.string().required(),
+//     username:Joi.string().required(),
+//     photoURL:Joi.string().required(),
+//   }
+// }), loginController.createOrLogin)
 
-router.put('/user/:id', celebrate({
-  [Segments.PARAMS] : {
-    id: Joi.string().required()
-  },
-  [Segments.BODY] : {
-    name: Joi.string().required(),
-    email: Joi.string().required()
-  }
-}),userController.update)
+// // User
+// router.get('/user', userController.getAll)
 
-router.delete('/user/:id', celebrate({
-  [Segments.PARAMS] : {
-    id: Joi.string().required()
-  }
-}),userController.delete)
+// router.get('/user:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   }
+// }), userController.getById)
 
-// Book
-router.get('/book', celebrate({
-  [Segments.QUERY]: {
-    title: Joi.string().required(),
-    author: Joi.string().required(),
-    categories: Joi.array().items(Joi.string()).required()
-  }
-}), bookController.getAll)
+// router.put('/user/:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   },
+//   [Segments.BODY] : {
+//     name: Joi.string().required(),
+//     email: Joi.string().required()
+//   }
+// }),userController.update)
 
-router.get('/book/:id', celebrate({
-  [Segments.PARAMS] : {
-    id: Joi.string().required()
-  }
-}),bookController.getById)
+// router.delete('/user/:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   }
+// }),userController.delete)
 
-router.post('/book', celebrate({
-  [Segments.BODY]: {
-    title: Joi.string().required(),
-    author: Joi.string().required(),
-    categories: Joi.array().items(Joi.string()).required()
-  }
-}), bookController.create)
+// // Book
+// router.get('/book', celebrate({
+//   [Segments.QUERY]: {
+//     title: Joi.string().required(),
+//     author: Joi.string().required(),
+//     categories: Joi.array().items(Joi.string()).required()
+//   }
+// }), bookController.getAll)
 
-router.put('/book/:id', celebrate({
-  [Segments.PARAMS] : {
-    id: Joi.string().required()
-  },
-  [Segments.BODY] : {
-    title: Joi.string().required(),
-    author: Joi.string().required(),
-    categories: Joi.array().items(Joi.string()).required()
-  }
-}),bookController.update)
+// router.get('/book/:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   }
+// }),bookController.getById)
 
-router.delete('/book/:id', celebrate({
-  [Segments.PARAMS] : {
-    id: Joi.string().required()
-  }
-}),bookController.delete)
+// router.post('/book', celebrate({
+//   [Segments.BODY]: {
+//     title: Joi.string().required(),
+//     author: Joi.string().required(),
+//     categories: Joi.array().items(Joi.string()).required()
+//   }
+// }), bookController.create)
+
+// router.put('/book/:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   },
+//   [Segments.BODY] : {
+//     title: Joi.string().required(),
+//     author: Joi.string().required(),
+//     categories: Joi.array().items(Joi.string()).required()
+//   }
+// }),bookController.update)
+
+// router.delete('/book/:id', celebrate({
+//   [Segments.PARAMS] : {
+//     id: Joi.string().required()
+//   }
+// }),bookController.delete)
 
 module.exports = router

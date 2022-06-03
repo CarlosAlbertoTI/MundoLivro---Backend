@@ -1,7 +1,11 @@
 class LoginController {
 
-  static async create(req, res) {
-    const {email} = req.body
+  static async createOrLogin(req, res) {
+    const {email,username,urlPhoto,id} = req.body
+
+    if(email == undefined || username == undefined || urlPhoto == undefined || id == undefined){
+      return res.status(400).json({message:"There are some data missing"})
+    }
     //console.log(typeof email)
     //console.log(req.body)
     
