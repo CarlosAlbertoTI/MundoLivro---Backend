@@ -1,7 +1,7 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 const router = require("express").Router()
 
-bookController = require("../controller/book.controller.js")
+bookController = require("../../controller/book.controller.js")
 
 // Book
 router.get('/book', celebrate({

@@ -1,11 +1,11 @@
-class User{
+class User {
     #id
     #username
     #email
     #urlPhoto
 
 
-    constructor(id, username, email, urlPhoto){
+    constructor(id, username, email, urlPhoto) {
         this.#id = id
         this.#email = email
         this.#username = username
@@ -13,26 +13,37 @@ class User{
     }
 
 
-    getID(){
+    getID() {
         return this.#id
     }
-    getUsername(){
+    getUsername() {
         return this.#username
     }
-    getEmail(){
+    getEmail() {
         return this.#email
     }
-    getUrlPhoto(){
+    getUrlPhoto() {
         return this.#urlPhoto
     }
 
-    setUsername(newUsername){
+    setUsername(newUsername) {
         this.#username = newUsername;
     }
-    setEmail(newEmail){
+    setEmail(newEmail) {
         this.#email = newEmail;
     }
-    setUrlPhoto(newUsername){
+    setUrlPhoto(newUsername) {
         this.#username = newUsername;
     }
+
+    toJson() {
+        return {
+            email: this.#email,
+            username: this.#username,
+            urlPhoto: this.#urlPhoto
+        }
+    }
 }
+
+
+module.exports = User

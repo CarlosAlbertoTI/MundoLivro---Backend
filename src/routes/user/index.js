@@ -1,7 +1,7 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 const router = require("express").Router()
 
-userController = require("../controller/user.controller.js")
+userController = require("../../controller/user.controller.js")
 
 // User
 router.get('/user', userController.getAll)
