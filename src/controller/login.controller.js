@@ -1,5 +1,5 @@
 
-const { addNewUser, searchByQuerie, getUsers } = require("../services/firebase/database")
+const { addNewUser, searchByUser, getUsers } = require("../services/firebase/database")
 const User = require("../models/User/User")
 
 
@@ -14,15 +14,14 @@ class LoginController {
 
     if (email.split("@")[1] == "alu.ufc.br") {
       // checar se o dado ja existe no banco
-      const [checkUser] = await searchByQuerie('email', email)
+      const [checkUser] = await searchByUser('email', email)
+
       if (checkUser == undefined) {
-        const newUser = new User(id, username, email, urlPhoto);
+        const newUser = new User(null, username, email, urlPhoto);
         addNewUser(newUser.toJson());
         return res.status(200).json({ message: "The user was created" });
       }
-
-      res.status(200).json({ message: "The user has logged succefully" })
-
+      res.status(200).json({ message: "The user has logged succefully", data: checkUser })
     }
     return res.status(200).json({ message: "This email is not valid", email })
   }

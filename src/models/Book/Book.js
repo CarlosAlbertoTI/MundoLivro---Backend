@@ -1,11 +1,11 @@
-class Book{
+class Book {
     #id
     #idUser
     #name
     #description
     #categories
 
-    constructor(id,idUser,name, description, categories){
+    constructor(id = 0, idUser, name, description, categories) {
         this.#id = id
         this.#idUser = idUser
         this.#name = name
@@ -13,33 +13,33 @@ class Book{
         this.#categories = categories
     }
 
-    getID(){
+    getID() {
         return this.#id
     }
-    getIdUser(){
+    getIdUser() {
         return this.#idUser
     }
-    getName(){
+    getName() {
         return this.#name
     }
-    getDescription(){
+    getDescription() {
         return this.#description
     }
-    getCategories(){
+    getCategories() {
         return this.#categories
     }
 
 
-    setIdUser(newUserId){
+    setIdUser(newUserId) {
         this.#idUser = newUserId
     }
-    setName(newName){
+    setName(newName) {
         this.#name = newName
     }
-    setDescription(newDescription){
+    setDescription(newDescription) {
         this.#description = newDescription
     }
-    setCategories(newCategories){
+    setCategories(newCategories) {
         this.#categories = newCategories
     }
 }
