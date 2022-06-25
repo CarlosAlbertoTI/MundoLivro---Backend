@@ -83,7 +83,8 @@ class FirebaseDB {
         onValue(starCountRef, (snapshot) => {
             snapshot.forEach((user) => {
                 const { bookList } = user.val()
-                books = books.concat(Object.entries(bookList))
+                if (bookList) books = books.concat(Object.entries(bookList))
+
             })
 
         });
