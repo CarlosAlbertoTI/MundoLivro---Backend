@@ -4,8 +4,8 @@ const GetBooksFromUserService = require("../services/book/GetBooksFromUserServic
 const GetBookByIdOfUser = require("../services/book/GetBookByIdOfUserService");
 const CreateBookService = require("../services/book/CreateBookService");
 const DeleteBookService = require("../services/book/DeleteBookService");
-
-
+const ChangeBookInfoService = require('../services/book/ChangeBookInfoService')
+const Book = require("../models/Book/Book")
 //DB
 const FirebaseDB = require("../services/firebase/database");
 
@@ -43,6 +43,7 @@ class BookController {
   // Adiciona um livro a um usuário
   static async create(req, res) {
     const {
+      id,
       userId,
       name,
       description,
@@ -50,22 +51,36 @@ class BookController {
     } = req.body;
 
     const createBookService = new CreateBookService(FirebaseDB);
-    const book = await createBookService.execute(userId, {
-      userId,
+    const newBook = new Book(id, userId,
       name,
       description,
-      categories
-    });
+      categories)
+    const data = newBook.toJson()
+    delete data.id
+    const book = await createBookService.execute(userId, data);
 
     return res.status(200).json({ book });
   }
 
-  // static async update(req, res) {
-  //   const { id } = req.params
-  //   const { title, author, categories } = req.body
+  static async update(req, res) {
+    const {
+      userId,
+      bookId,
+      value
+    } = req.body;
 
-  //   return res.status(200).json({ data: req.body, id })
-  // }
+    console.info(req.body)
+    const changeBookInfoService = new ChangeBookInfoService(FirebaseDB)
+    const updateBook = changeBookInfoService.execute(userId, bookId, value)
+    if (updateBook) {
+      return res.status(200).json({ message: "The book was updated" });
+    }
+    return res.status(400).json({ message: "Error!!!" });
+    //   const { id } = req.params
+    //   const { title, author, categories } = req.body
+
+    //   return res.status(200).json({ data: req.body, id })
+  }
 
   // Deleta um livro de um usuário
   static async delete(req, res) {

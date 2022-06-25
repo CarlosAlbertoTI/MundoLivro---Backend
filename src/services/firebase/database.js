@@ -7,12 +7,17 @@ const reference = ref(db, '/users');
 
 // Classe responsável por representar o banco de dados do firebase
 class FirebaseDB {
-    constructor() {}
+    constructor() { }
 
     // Pega todos os usuários do banco de dados
     async getUsers() {
         // TODO
-        return [];
+        const users = [];
+        const starCountRef = ref(db, 'users/');
+        onValue(starCountRef, (snapshot) => {
+            users.push({ ...snapshot.val(), id: snapshot.key });
+        });
+        return users;
     }
 
     async getUserById(userId) {
@@ -21,9 +26,10 @@ class FirebaseDB {
         onValue(starCountRef, (snapshot) => {
             users.push({ ...snapshot.val(), id: snapshot.key });
         });
+
         return users;
     }
-    
+
     async searchByUser(info, value) {
         const search = [];
         onValue(reference, (snapshot) => {
@@ -35,31 +41,30 @@ class FirebaseDB {
         });
         return search;
     }
-    
-    async addNewUser(newUser) {
-        const refOfUsers = push(reference);
-        set(refOfUsers, newUser);
+
+    async addNewUser(newUser, userId) {
+        const db = getDatabase();
+        set(ref(db, 'users/' + userId), newUser);
     }
-    
+
     async changeUserInfo(userId, info, value) {
-        let returnData;
         const starCountRef = ref(db, 'users' + `/${userId}`);
         onValue(starCountRef, (snapshot) => {
             if (snapshot.exists()) {
                 const updates = {};
                 updates[`/${info}`] = value;
                 update(ref(db, 'users/' + userId), updates);
-    
+
             } else {
-                returnData = 0;
+                return false
             }
-    
+
         }, () => {
-            console.info("ALGO DEU RUIM");
+            return false
         });
-        return returnData;
+        return true;
     }
-    
+
     // Books
     async addUserBook(userId, newBook) {
         const starCountRef = ref(db, 'users' + `/${userId}/bookList`);
@@ -73,10 +78,18 @@ class FirebaseDB {
 
     // Pega todos os livros do banco de dados
     async getBooks() {
-        // TODO
-        return [];
+        let books = [];
+        const starCountRef = ref(db, 'users/');
+        onValue(starCountRef, (snapshot) => {
+            snapshot.forEach((user) => {
+                const { bookList } = user.val()
+                books = books.concat(Object.entries(bookList))
+            })
+
+        });
+        return books.map((entry) => entry[1]);
     }
-    
+
     async getUsersBooks(userId) {
         const users = [];
         const starCountRef = ref(db, 'users' + `/${userId}/bookList`);
@@ -85,7 +98,7 @@ class FirebaseDB {
         });
         return [users];
     }
-    
+
     async getBookByIdOfUser(userId, bookId) {
         const users = [];
         const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
@@ -95,6 +108,24 @@ class FirebaseDB {
             }
         });
         return [users];
+    }
+
+    async changeBookInfo(userId, bookId, info, value) {
+        const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
+        onValue(starCountRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const updates = {};
+                updates[`/${info}`] = value;
+                update(ref(db, 'users' + `/${userId}/bookList/${bookId}`), updates);
+
+            } else {
+                return false
+            }
+
+        }, () => {
+            return false
+        });
+        return true;
     }
 }
 

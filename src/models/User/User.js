@@ -60,12 +60,13 @@ class User {
 
     toJson() {
         return {
+            id: this.#id,
             email: this.#email,
             username: this.#username,
             urlPhoto: this.#urlPhoto,
-            booksList: this.#booksList,
             campus: this.#campus,
-            phone: this.#phone
+            phone: this.#phone,
+            booksList: this.#booksList
         }
     }
 }

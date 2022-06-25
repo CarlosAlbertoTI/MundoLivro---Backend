@@ -5,17 +5,17 @@ bookController = require("../../controller/book.controller.js")
 
 router.get('/book',
   // celebrate({
-  //     [Segments.QUERY]: {
-  //       title: Joi.string().required(),
-  //       author: Joi.string().required(),
-  //       categories: Joi.array().items(Joi.string()).required()
-  //     }
-  //   }),
+  //   [Segments.QUERY]: {
+  //     title: Joi.string().required(),
+  //     author: Joi.string().required(),
+  //     categories: Joi.array().items(Joi.string()).required()
+  //   }
+  // }),
   bookController.getAll)
 
 router.get('/book/id/',
   // celebrate({
-  //   [Segments.PARAMS] : {
+  //   [Segments.PARAMS]: {
   //     id: Joi.string().required()
   //   }
   // }),
@@ -28,25 +28,25 @@ router.post('/book',
   //     author: Joi.string().required(),
   //     categories: Joi.array().items(Joi.string()).required()
   //   }
-  // }), 
+  // }),
   bookController.create)
 
-// router.put('/book/:id',
-//   // celebrate({
-//   //   [Segments.PARAMS] : {
-//   //     id: Joi.string().required()
-//   //   },
-//   //   [Segments.BODY] : {
-//   //     title: Joi.string().required(),
-//   //     author: Joi.string().required(),
-//   //     categories: Joi.array().items(Joi.string()).required()
-//   //   }
-//   // }),
-//   bookController.update)
+router.put('/book/buy/',
+  //   // celebrate({
+  //   //   [Segments.PARAMS] : {
+  //   //     id: Joi.string().required()
+  //   //   },
+  //   //   [Segments.BODY] : {
+  //   //     title: Joi.string().required(),
+  //   //     author: Joi.string().required(),
+  //   //     categories: Joi.array().items(Joi.string()).required()
+  //   //   }
+  //   // }),
+  bookController.update)
 
 router.delete('/book',
   // celebrate({
-  //   [Segments.PARAMS] : {
+  //   [Segments.PARAMS]: {
   //     id: Joi.string().required()
   //   }
   // }),

@@ -1,23 +1,25 @@
 class Book {
     #id
-    #idUser
+    #userId
     #name
     #description
     #categories
+    #blocked
 
-    constructor(id = 0, idUser, name, description, categories) {
+    constructor(id = 0, userId, name, description, categories, blocked = false) {
         this.#id = id
-        this.#idUser = idUser
+        this.#userId = userId
         this.#name = name
         this.#description = description
         this.#categories = categories
+        this.#blocked = blocked
     }
 
     getID() {
         return this.#id
     }
     getIdUser() {
-        return this.#idUser
+        return this.#userId
     }
     getName() {
         return this.#name
@@ -28,10 +30,13 @@ class Book {
     getCategories() {
         return this.#categories
     }
+    getBlocked() {
+        return this.#blocked
+    }
 
 
     setIdUser(newUserId) {
-        this.#idUser = newUserId
+        this.#userId = newUserId
     }
     setName(newName) {
         this.#name = newName
@@ -42,4 +47,21 @@ class Book {
     setCategories(newCategories) {
         this.#categories = newCategories
     }
+    setBlocked(newBlock) {
+        this.#blocked = newBlock
+    }
+
+    toJson() {
+        return {
+            id: this.#id,
+            userId: this.#userId,
+            name: this.#name,
+            description: this.#description,
+            categories: this.#categories,
+            blocked: this.#blocked
+        }
+    }
+
 }
+
+module.exports = Book
