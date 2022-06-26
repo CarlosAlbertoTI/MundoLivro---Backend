@@ -11,7 +11,7 @@ class UserController {
     const getUsersService = new GetUsersService(firebaseDB);
     const users = await getUsersService.execute();
 
-    return res.status(200).json({ users })
+    return res.status(200).json(users)
   }
 
   static async getById(req, res) {

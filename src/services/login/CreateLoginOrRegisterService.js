@@ -18,6 +18,6 @@ module.exports = class CreateLoginOrRegisterService {
             return { message: "The user has logged", data: checkUser };
         }
 
-        throw new Error('Email inválido');
+        return {message:"Email is not valid!"}
     }
 }

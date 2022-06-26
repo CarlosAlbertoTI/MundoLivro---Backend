@@ -44,6 +44,7 @@ class FirebaseDB {
 
     async addNewUser(newUser, userId) {
         const db = getDatabase();
+        delete newUser.id
         set(ref(db, 'users/' + userId), newUser);
     }
 
