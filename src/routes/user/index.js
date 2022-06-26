@@ -14,13 +14,13 @@ router.get('/user/id'
 router.get('/user', userController.getAll)
 
 router.put('/user',
-  celebrate({
-    [Segments.BODY]: {
-      info: Joi.string().required(),
-      value: Joi.string().required(),
-      id: Joi.string().required()
-    }
-  }),
+  // celebrate({
+  //   [Segments.BODY]: {
+  //     info: Joi.string().required(),
+  //     value: Joi.string().required(),
+  //     id: Joi.string().required()
+  //   }
+  // }),
   userController.update)
 
 router.delete('/user/:id', celebrate({

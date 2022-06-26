@@ -31,6 +31,16 @@ router.post('/book',
   // }),
   bookController.create)
 
+router.post('/book/user',
+  // celebrate({
+  //   [Segments.BODY]: {
+  //     title: Joi.string().required(),
+  //     author: Joi.string().required(),
+  //     categories: Joi.array().items(Joi.string()).required()
+  //   }
+  // }),
+  bookController.getAllFromUser)
+
 router.put('/book/buy/',
   //   // celebrate({
   //   //   [Segments.PARAMS] : {

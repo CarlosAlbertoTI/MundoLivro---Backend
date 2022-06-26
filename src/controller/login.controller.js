@@ -8,23 +8,19 @@ class LoginController {
 
   static async createOrLogin(req, res) {
     const { id, username, email, urlPhoto, booksList, campus, phone } = req.body
-    
-
-    if (id != undefined) {
-      const getUserByIdService = new GetUserByIdService(firebaseDB)
-      const [searchById] = await getUserByIdService.execute(id)
-      if (searchById != undefined)
-        return res.status(200).json({ message: "The user has logged", data: searchById })
-    }
-
     const createLoginOrRegisterService = new CreateLoginOrRegisterService(firebaseDB);
     const newUser = new User(id,username,email,urlPhoto,booksList, campus,phone)
-    const user = await createLoginOrRegisterService.execute(newUser.getID(),newUser.getEmail(),newUser.getUsername(),newUser.getUrlPhoto());
-    if(user.message == 'The email is not valid!') return res.status(400).json(user);
-    const searchByUserService = new GetUserByIdService(firebaseDB)
-    const searchUser = await searchByUserService.execute(id)
+    const {message,data} = await createLoginOrRegisterService.execute(newUser.getID(),newUser.getEmail(),newUser.getUsername(),newUser.getUrlPhoto());
+    if(message == 'Email is not valid!') {
+      return res.status(401).json(message);
+    }
+    if(message == "The user was created"){
+      const searchByUserService = new GetUserByIdService(firebaseDB)
+      const searchUser = await searchByUserService.execute(id)
+      return res.status(201).json({ message: "The user has created succefully", data: searchUser[0] });
+    }
+    return res.status(201).json({message, data})
 
-    return res.status(200).json({ message: "The user has created succefully", data: searchUser });
   }
 }
 

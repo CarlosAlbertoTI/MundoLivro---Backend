@@ -26,7 +26,8 @@ class FirebaseDB {
         onValue(starCountRef, (snapshot) => {
             users.push({ ...snapshot.val(), id: snapshot.key });
         });
-
+        console.info('slkdfaslkdfjasldkfjasldfsadf')
+        console.info(users)
         return users;
     }
 
@@ -93,12 +94,15 @@ class FirebaseDB {
     }
 
     async getUsersBooks(userId) {
-        const users = [];
+        const books = [];
         const starCountRef = ref(db, 'users' + `/${userId}/bookList`);
         onValue(starCountRef, (snapshot) => {
-            users.push(snapshot.val());
+            snapshot.forEach((book) => {
+                books.push({ ...book.val(), id: book.key });
+
+            })
         });
-        return [users];
+        return books;
     }
 
     async getBookByIdOfUser(userId, bookId) {
@@ -106,9 +110,10 @@ class FirebaseDB {
         const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
         onValue(starCountRef, (snapshot) => {
             if (snapshot.exists()) {
-                users.push(snapshot.val());
+                users.push({ ...snapshot.val(), id: snapshot.key });
             }
         });
+        console.log({userId, bookId, info, value})
         return [users];
     }
 
