@@ -1,6 +1,6 @@
 const app = require('./firebase');
 const database = require("firebase/database");
-const { getDatabase, ref, get, push, onValue, update, remove } = database
+const { getDatabase, ref, get, push, set, onValue, update, remove } = database
 const db = getDatabase();
 
 // Classe responsável por representar o banco de dados do firebase
@@ -35,7 +35,8 @@ class FirebaseDB {
 
     // Adiciona um novo usuário
     async addNewUser(id, email, username, urlPhoto) {
-        const snapshot = await get(push(ref(db, `users/${id}`), {email, username, urlPhoto}).ref);
+        await set(ref(db, `users/${id}`), {email, username, urlPhoto});
+        const snapshot = await get(ref(db, `users/${id}`));
         return snapshot.exists() ? {id: snapshot.key, ...snapshot.val()} : null;
     }
 
