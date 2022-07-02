@@ -63,11 +63,11 @@ class FirebaseDB {
         const books = [];
         
         const snapshot = await get(ref(db, 'users/'));
-        snapshot.forEach((user) => {
-            const { bookList } = user.val()
+        snapshot.forEach((userSnapshot) => {
+            const { bookList } = userSnapshot.val()
             if(bookList) {
                 Object.entries(bookList).map(([id, book]) => {
-                    books.push({id, ...book})
+                    books.push({id, userId: userSnapshot.key,...book, })
                 })
             }
         })
