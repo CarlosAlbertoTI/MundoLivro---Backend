@@ -13,10 +13,10 @@ module.exports = class ChangeBookInfoService {
 
         const updatedBook = {...book}
         // Modifica o objeto livro
-        if(name) updatedBook.name = name;
-        if(description) updatedBook.description = description;
-        if(categories) updatedBook.categories = categories;
-        if(blocked) updatedBook.blocked = blocked;
+        if(name !== undefined) updatedBook.name = name;
+        if(description !== undefined) updatedBook.description = description;
+        if(categories !== undefined) updatedBook.categories = categories;
+        if(blocked !== undefined) updatedBook.blocked = blocked;
         delete updatedBook.id
 
         await this.db.changeBookInfo(userId, bookId, updatedBook);

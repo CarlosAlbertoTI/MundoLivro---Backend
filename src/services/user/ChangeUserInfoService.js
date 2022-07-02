@@ -8,10 +8,10 @@ module.exports = class ChangeUserInfoService {
         
         const updatedUser = {...user}
         // Modifica o objeto usuário
-        if(username) updatedUser.username = username;
-        if(urlPhoto) updatedUser.urlPhoto = urlPhoto;
-        if(campus) updatedUser.campus = campus;
-        if(phone) updatedUser.phone = phone;
+        if(username !== undefined) updatedUser.username = username;
+        if(urlPhoto !== undefined) updatedUser.urlPhoto = urlPhoto;
+        if(campus !== undefined) updatedUser.campus = campus;
+        if(phone !== undefined) updatedUser.phone = phone;
         delete updatedUser.id
 
         // Faz o update
