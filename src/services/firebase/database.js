@@ -78,7 +78,7 @@ class FirebaseDB {
     async getUsersBooks(userId) {
         const books = [];
         const snapshot = await get(ref(db, `users/${userId}/bookList`));
-        snapshot.forEach(bookSnapshot => { books.push(bookSnapshot.val()) })
+        snapshot.forEach(bookSnapshot => { books.push({id: bookSnapshot.key, ...bookSnapshot.val()}) })
         return books;
     }
 
