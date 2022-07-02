@@ -13,7 +13,7 @@ router.get('/book',
   // }),
   bookController.getAll)
 
-router.get('/book/id/',
+router.get('/user/:userId/book/:bookId',
   // celebrate({
   //   [Segments.PARAMS]: {
   //     id: Joi.string().required()
@@ -21,7 +21,7 @@ router.get('/book/id/',
   // }),
   bookController.getById)
 
-router.post('/book',
+router.post('/:userId/book',
   // celebrate({
   //   [Segments.BODY]: {
   //     title: Joi.string().required(),
@@ -31,7 +31,7 @@ router.post('/book',
   // }),
   bookController.create)
 
-router.post('/book/user',
+router.get('/user/:userId/book',
   // celebrate({
   //   [Segments.BODY]: {
   //     title: Joi.string().required(),
@@ -41,7 +41,7 @@ router.post('/book/user',
   // }),
   bookController.getAllFromUser)
 
-router.put('/book/buy/',
+router.put('/user/:userId/book/:bookId',
   //   // celebrate({
   //   //   [Segments.PARAMS] : {
   //   //     id: Joi.string().required()
@@ -54,7 +54,7 @@ router.put('/book/buy/',
   //   // }),
   bookController.update)
 
-router.delete('/book',
+router.delete('/user/:userId/book/:bookId',
   // celebrate({
   //   [Segments.PARAMS]: {
   //     id: Joi.string().required()

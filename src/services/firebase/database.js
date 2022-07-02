@@ -1,9 +1,7 @@
-const User = require("../../models/User/User");
-const database = require("firebase/database");
-const { getDatabase, ref, set, push, onValue, update, remove } = database
 const app = require('./firebase');
+const database = require("firebase/database");
+const { getDatabase, ref, get, push, onValue, update, remove } = database
 const db = getDatabase();
-const reference = ref(db, '/users');
 
 // Classe responsável por representar o banco de dados do firebase
 class FirebaseDB {
@@ -11,128 +9,87 @@ class FirebaseDB {
 
     // Pega todos os usuários do banco de dados
     async getUsers() {
-        // TODO
         const users = [];
-        const starCountRef = ref(db, 'users/');
-        onValue(starCountRef, (snapshot) => {
-            users.push({ ...snapshot.val(), id: snapshot.key });
-        });
+        const snapshot = await get(ref(db, 'users/'));
+        snapshot.forEach(userSnapshot => {
+            users.push({id: userSnapshot.key, ...userSnapshot.val()})
+        })
         return users;
     }
 
+    // Pega um usuário por id
     async getUserById(userId) {
+        const snapshot = await get(ref(db, `users/${userId}`));
+        return snapshot.exists() ? {id: snapshot.key, ...snapshot.val()} : null;
+    }
+
+    // Pega usuários que possuam info == value
+    async searchByUser(info, value) {
         const users = [];
-        const starCountRef = ref(db, 'users' + `/${userId}`);
-        onValue(starCountRef, (snapshot) => {
-            users.push({ ...snapshot.val(), id: snapshot.key });
-        });
-        console.info('slkdfaslkdfjasldkfjasldfsadf')
-        console.info(users)
+        const snapshot = await get(ref(db, 'users/'));
+        snapshot.forEach(userSnapshot => {
+            if(userSnapshot.val()[info] == value) users.push({id: userSnapshot.key, ...userSnapshot.val()})
+        })
         return users;
     }
 
-    async searchByUser(info, value) {
-        const search = [];
-        onValue(reference, (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                if (childSnapshot.val()[info] == value) {
-                    search.push({ ...childSnapshot.val(), id: childSnapshot.key });
-                }
-            });
-        });
-        return search;
+    // Adiciona um novo usuário
+    async addNewUser(email, username, urlPhoto) {
+        const snapshot = await get(push(ref(db, 'users/'), {email, username, urlPhoto}).ref);
+        return snapshot.exists() ? {id: snapshot.key, ...snapshot.val()} : null;
     }
 
-    async addNewUser(newUser, userId) {
-        const db = getDatabase();
-        delete newUser.id
-        set(ref(db, 'users/' + userId), newUser);
+    // Faz update do usuário
+    async changeUserInfo(userId, data) {
+        return await update(ref(db, `users/${userId}`), data)
     }
 
-    async changeUserInfo(userId, info, value) {
-        const starCountRef = ref(db, 'users' + `/${userId}`);
-        onValue(starCountRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const updates = {};
-                updates[`/${info}`] = value;
-                update(ref(db, 'users/' + userId), updates);
-
-            } else {
-                return false
-            }
-
-        }, () => {
-            return false
-        });
-        return true;
+    // Adiciona um livro a um usuário
+    async addUserBook(userId, book) {
+        const snapshot = await get(push(ref(db, `users/${userId}/bookList`), book).ref);
+        return snapshot.val();
     }
 
-    // Books
-    async addUserBook(userId, newBook) {
-        const starCountRef = ref(db, 'users' + `/${userId}/bookList`);
-        const refOfUsers = push(starCountRef);
-        set(refOfUsers, newBook);
-    }
+    // Remove um livro de um usuário
     async removeUserBook(userId, bookId) {
-        const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
-        remove(starCountRef);
+        const bookSnapshot = await get(ref(db, `users/${userId}/bookList/${bookId}`));
+        await remove(bookSnapshot.ref);
+        return bookSnapshot.val();
     }
 
     // Pega todos os livros do banco de dados
     async getBooks() {
-        let books = [];
-        const starCountRef = ref(db, 'users/');
-        onValue(starCountRef, (snapshot) => {
-            snapshot.forEach((user) => {
-                const { bookList } = user.val()
-                if (bookList) books = books.concat(Object.entries(bookList))
-
-            })
-
-        });
-        return books.map((entry) => entry[1]);
+        const books = [];
+        
+        const snapshot = await get(ref(db, 'users/'));
+        snapshot.forEach((user) => {
+            const { bookList } = user.val()
+            if(bookList) {
+                Object.entries(bookList).map(([id, book]) => {
+                    books.push({id, ...book})
+                })
+            }
+        })
+        return books
     }
 
+    // Pega todos os livros de um usuário
     async getUsersBooks(userId) {
         const books = [];
-        const starCountRef = ref(db, 'users' + `/${userId}/bookList`);
-        onValue(starCountRef, (snapshot) => {
-            snapshot.forEach((book) => {
-                books.push({ ...book.val(), id: book.key });
-
-            })
-        });
+        const snapshot = await get(ref(db, `users/${userId}/bookList`));
+        snapshot.forEach(bookSnapshot => { books.push(bookSnapshot.val()) })
         return books;
     }
 
-    async getBookByIdOfUser(userId, bookId) {
-        const users = [];
-        const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
-        onValue(starCountRef, (snapshot) => {
-            if (snapshot.exists()) {
-                users.push({ ...snapshot.val(), id: snapshot.key });
-            }
-        });
-        console.log({userId, bookId, info, value})
-        return [users];
+    // Pega livro pelo o id
+    async getBookById(userId, bookId) {
+        const snapshot = await get(ref(db, `users/${userId}/bookList/${bookId}`));
+        return snapshot.exists() ? {id: snapshot.key, ...snapshot.val()} : null;
     }
 
-    async changeBookInfo(userId, bookId, info, value) {
-        const starCountRef = ref(db, 'users' + `/${userId}/bookList/${bookId}`);
-        onValue(starCountRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const updates = {};
-                updates[`/${info}`] = value;
-                update(ref(db, 'users' + `/${userId}/bookList/${bookId}`), updates);
-
-            } else {
-                return false
-            }
-
-        }, () => {
-            return false
-        });
-        return true;
+    // Faz update de um livro
+    async changeBookInfo(userId, bookId, data) {
+        return await update(ref(db, `users/${userId}/bookList/${bookId}`), data)
     }
 }
 

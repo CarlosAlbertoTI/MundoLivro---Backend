@@ -7,39 +7,33 @@ const ChangeUserInfoService = require("../services/user/ChangeUserInfoService")
 const firebaseDB = require('../services/firebase/database')
 class UserController {
 
-  static async getAll(_, res) {
+  static async getAll(req, res) {
     const getUsersService = new GetUsersService(firebaseDB);
     const users = await getUsersService.execute();
 
-    return res.status(200).json(users)
+    return res.status(200).json(users);
   }
 
   static async getById(req, res) {
-    const { id } = req.body
+    const { id } = req.params;
 
     const getUserByIdService = new GetUserByIdService(firebaseDB);
     const user = await getUserByIdService.execute(id);
 
-    return res.status(200).json({ user })
+    return res.status(200).json(user);
   }
 
   static async update(req, res) {
-    const { id, info, value } = req.body
+    const { id } = req.params;
+    const { username, urlPhoto, campus, phone } = req.body;
 
-    const changeUserInfoService = new ChangeUserInfoService(firebaseDB)
-    const updateUser = await changeUserInfoService.execute(id, info, value)
-
-    if (updateUser) {
-      return res.status(200).json({ message: "User's info updated" })
+    const changeUserInfoService = new ChangeUserInfoService(firebaseDB);
+    try {
+      const user = await changeUserInfoService.execute(id, username, urlPhoto, campus, phone);
+      return res.status(201).json(user)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
     }
-    return res.status(400).json({ message: "We couldn't change user's info" })
-
-  }
-
-  static async delete(req, res) {
-    const { id } = req.params
-
-    //   return res.status(200).json({ data: id })
   }
 }
 

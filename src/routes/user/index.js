@@ -3,17 +3,17 @@ const router = require("express").Router()
 
 userController = require("../../controller/user.controller.js")
 
-router.get('/user/id'
-  , celebrate({
-    [Segments.BODY]: {
-      id: Joi.string().required()
-    }
-  })
-  , userController.getById)
+router.get('/user/:id', 
+  // celebrate({
+  //   [Segments.BODY]: {
+  //     id: Joi.string().required()
+  //   }
+  // })
+  userController.getById)
 
 router.get('/user', userController.getAll)
 
-router.put('/user',
+router.put('/user/:id',
   // celebrate({
   //   [Segments.BODY]: {
   //     info: Joi.string().required(),
@@ -22,12 +22,5 @@ router.put('/user',
   //   }
   // }),
   userController.update)
-
-router.delete('/user/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().required()
-  }
-}), userController.delete)
-
 
 module.exports = router

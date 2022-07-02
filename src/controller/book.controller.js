@@ -1,11 +1,11 @@
 //Services
 const GetBooksService = require("../services/book/GetBooksService");
 const GetBooksFromUserService = require("../services/book/GetBooksFromUserService");
-const GetBookByIdOfUser = require("../services/book/GetBookByIdOfUserService");
+const GetBookByIdService = require("../services/book/GetBookByIdService");
 const CreateBookService = require("../services/book/CreateBookService");
 const DeleteBookService = require("../services/book/DeleteBookService");
 const ChangeBookInfoService = require('../services/book/ChangeBookInfoService')
-const Book = require("../models/Book/Book")
+
 //DB
 const FirebaseDB = require("../services/firebase/database");
 
@@ -16,80 +16,73 @@ class BookController {
     const getBooksService = new GetBooksService(FirebaseDB);
   
     const books = await getBooksService.execute();
-
-    return res.status(200).json({ books });
+    return res.status(200).json(books);
   }
 
   // Pega todos os livros de um usuário
   static async getAllFromUser(req, res) {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     const getBooksFromUserService = new GetBooksFromUserService(FirebaseDB);
-
-    const books = await getBooksFromUserService.execute(userId);
-    return res.status(200).json({ books });
+    try {
+      const books = await getBooksFromUserService.execute(userId);
+      return res.status(201).json(books)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
+    }
   }
 
   // Pega um livro por id de um usuário
   static async getById(req, res) {
-    const { userId, bookId } = req.body
+    const { userId, bookId } = req.params
 
-    const getBookByIdOfUser = new GetBookByIdOfUser(FirebaseDB);
-    const book = await getBookByIdOfUser.execute(userId, bookId);
-
-    return res.status(200).json({ book });
+    const getBookByIdService = new GetBookByIdService(FirebaseDB);
+    try {
+      const book = await getBookByIdService.execute(userId, bookId);
+      return res.status(201).json(book)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
+    }
   }
 
   // Adiciona um livro a um usuário
   static async create(req, res) {
-    const {
-      id,
-      userId,
-      name,
-      description,
-      categories
-    } = req.body;
+    const { userId } = req.params;
+    const { name, description, categories } = req.body;
 
     const createBookService = new CreateBookService(FirebaseDB);
-    const newBook = new Book(id, userId,
-      name,
-      description,
-      categories)
-    const data = newBook.toJson()
-    delete data.id
-    const book = await createBookService.execute(userId, data);
-
-    return res.status(200).json({ book });
+    try {
+      const book = await createBookService.execute(userId, name, description, categories);
+      return res.status(201).json(book)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
+    }
   }
 
   static async update(req, res) {
-    const {
-      userId,
-      bookId,
-      value
-    } = req.body;
+    const { userId, bookId } = req.params
+    const { name, description, categories } = req.body;
 
-    console.info(req.body)
     const changeBookInfoService = new ChangeBookInfoService(FirebaseDB)
-    const updateBook = changeBookInfoService.execute(userId, bookId, value)
-    if (updateBook) {
-      return res.status(200).json({ message: "The book was updated" });
+    try {
+      const book = await changeBookInfoService.execute(userId, bookId, name, description, categories)
+      return res.status(201).json(book)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
     }
-    return res.status(400).json({ message: "Error!!!" });
-    //   const { id } = req.params
-    //   const { title, author, categories } = req.body
-
-    //   return res.status(200).json({ data: req.body, id })
   }
 
   // Deleta um livro de um usuário
   static async delete(req, res) {
-    const { userId, bookId } = req.body;
+    const { userId, bookId } = req.params;
 
     const deleteBookService = new DeleteBookService(FirebaseDB);
-    const book = await deleteBookService.execute(userId, bookId);
-
-    return res.status(200).json({ book });
+    try {
+      const book = await deleteBookService.execute(userId, bookId);
+      return res.status(201).json(book)
+    } catch (error) {
+      return res.status(401).json({message: error.message})
+    }
   }
 }
 

@@ -8,9 +8,10 @@ router.post('/login',
     // celebrate({
     //     [Segments.BODY]: {
     //         "email": Joi.string().email().required(),
-    //         "id": Joi.string().required(),
     //         "username": Joi.string().required(),
     //         "urlPhoto": Joi.string().required(),
+    //         "phone": Joi.number().default(null),
+    //         "campus": Joi.string().default(null)
     //     }
     // }),
     loginController.createOrLogin)
