@@ -34,8 +34,8 @@ class FirebaseDB {
     }
 
     // Adiciona um novo usuário
-    async addNewUser(email, username, urlPhoto) {
-        const snapshot = await get(push(ref(db, 'users/'), {email, username, urlPhoto}).ref);
+    async addNewUser(id, email, username, urlPhoto) {
+        const snapshot = await get(push(ref(db, `users/${id}`), {email, username, urlPhoto}).ref);
         return snapshot.exists() ? {id: snapshot.key, ...snapshot.val()} : null;
     }
 

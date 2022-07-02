@@ -13,6 +13,6 @@ module.exports = class CreateLoginOrRegisterService {
         if(user) return user;
 
         // Cadastra o novo usuário
-        return await this.db.addNewUser(email, username, urlPhoto);
+        return await this.db.addNewUser(id, email, username, urlPhoto);
     }
 }

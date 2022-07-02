@@ -61,11 +61,11 @@ class BookController {
 
   static async update(req, res) {
     const { userId, bookId } = req.params
-    const { name, description, categories } = req.body;
+    const { name, description, categories, blocked } = req.body;
 
     const changeBookInfoService = new ChangeBookInfoService(FirebaseDB)
     try {
-      const book = await changeBookInfoService.execute(userId, bookId, name, description, categories)
+      const book = await changeBookInfoService.execute(userId, bookId, name, description, categories, blocked)
       return res.status(201).json(book)
     } catch (error) {
       return res.status(401).json({message: error.message})
