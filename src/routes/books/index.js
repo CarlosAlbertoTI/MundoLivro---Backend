@@ -21,7 +21,7 @@ router.get('/user/:userId/book/:bookId',
   // }),
   bookController.getById)
 
-router.post('/:userId/book',
+router.post('/user/:userId/book',
   // celebrate({
   //   [Segments.BODY]: {
   //     title: Joi.string().required(),
