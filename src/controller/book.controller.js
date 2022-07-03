@@ -48,11 +48,11 @@ class BookController {
   // Adiciona um livro a um usuário
   static async create(req, res) {
     const { userId } = req.params;
-    const { name, description, categories, img } = req.body;
+    const { name, description, categories, img, author } = req.body;
 
     const createBookService = new CreateBookService(FirebaseDB);
     try {
-      const book = await createBookService.execute(userId, name, description, categories, img);
+      const book = await createBookService.execute(userId, name, description, categories, img, author);
       return res.status(201).json(book)
     } catch (error) {
       return res.status(401).json({message: error.message})
