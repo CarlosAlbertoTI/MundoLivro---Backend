@@ -59,13 +59,13 @@ class FirebaseDB {
     }
 
     // Pega todos os livros do banco de dados
-    async getBooks() {
+    async getBooks(campusUser) {
         const books = [];
         
         const snapshot = await get(ref(db, 'users/'));
         snapshot.forEach((userSnapshot) => {
-            const { bookList } = userSnapshot.val()
-            if(bookList) {
+            const { bookList, campus } = userSnapshot.val()
+            if(bookList && campus == campusUser) {
                 Object.entries(bookList).map(([id, book]) => {
                     books.push({id, userId: userSnapshot.key,...book, })
                 })

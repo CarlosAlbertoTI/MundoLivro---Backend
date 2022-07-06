@@ -13,9 +13,11 @@ class BookController {
 
   // Pega todos os livros do banco de dados
   static async getAll(req, res) {
+    const {campus} = req.params;
+
     const getBooksService = new GetBooksService(FirebaseDB);
   
-    const books = await getBooksService.execute();
+    const books = await getBooksService.execute(campus);
     return res.status(200).json(books);
   }
 
